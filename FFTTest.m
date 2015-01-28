@@ -23,16 +23,16 @@ f=Fs/2*linspace(0,1,Lf);%取频率域横坐标
 subplot(2,1,2);
 plot(f,abs(y_fft(1:Lf)));%画出频率域信号
 
-%其他的
-figure(2);
-z = sin(2*pi*t) * abs(y_fft(1));
-for i=2:1:Lf,
-    y1 = sin(2*pi*t*i) * abs(y_fft(i));
-    z = [z;y1];
-end
-    
-    
-wigb(z',0.1);
-%figure(3);
-%plot(sum(z));
+% %其他的
+% figure(2);
+% z = sin(2*pi*t) * abs(y_fft(1));
+% for i=2:1:Lf,
+%     y1 = sin(2*pi*t*i) * abs(y_fft(i));
+%     z = [z;y1];
+% end
+%     
+%     
+% wigb(z',0.1);
+% %figure(3);
+% %plot(sum(z));
 

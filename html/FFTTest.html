@@ -1,0 +1,148 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>FFTTest</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-01-28"><meta name="DC.source" content="FFTTest.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear <span class="string">all</span>; <span class="comment">%&#28165;&#31354;&#20869;&#23384;</span>
+clc; <span class="comment">%&#28165;&#23631;</span>
+
+Fs = 256; <span class="comment">%&#37319;&#26679;&#39057;&#29575;</span>
+Tp = 2; <span class="comment">%&#37319;&#26679;&#25345;&#32493;&#26102;&#38388;</span>
+
+<span class="comment">%&#21407;&#22987;&#20449;&#21495;</span>
+f1 = 10; <span class="comment">%&#39057;&#29575;1</span>
+f2 = 8; <span class="comment">%&#39057;&#29575;2</span>
+
+t = 0:1/Fs:Tp; <span class="comment">%&#37319;&#26679;&#26102;&#38388;&#24207;&#21015;</span>
+L = length(t);<span class="comment">%&#37319;&#26679;&#38271;&#24230;</span>
+Lf = ceil(L/2);<span class="comment">%&#30733;&#25481;&#19968;&#21322;&#65292;&#22240;&#20026;&#26377;&#20551;&#39057;</span>
+figure(1);
+subplot(2,1,1);
+
+y=sin(2*pi*f1*t)+cos(2*pi*f2*t);<span class="comment">%+cos(2*pi*50*t); %&#21407;&#22987;&#20449;&#21495;</span>
+plot(t,y) ;<span class="comment">%&#30011;&#20986;&#21407;&#22987;&#20449;&#21495;</span>
+
+<span class="comment">%fft&#21464;&#25442;</span>
+y_fft = fft(y); <span class="comment">%&#24555;&#36895;&#20613;&#27663;&#21464;&#25442;</span>
+f=Fs/2*linspace(0,1,Lf);<span class="comment">%&#21462;&#39057;&#29575;&#22495;&#27178;&#22352;&#26631;</span>
+subplot(2,1,2);
+plot(f,abs(y_fft(1:Lf)));<span class="comment">%&#30011;&#20986;&#39057;&#29575;&#22495;&#20449;&#21495;</span>
+
+<span class="comment">% %&#20854;&#20182;&#30340;</span>
+<span class="comment">% figure(2);</span>
+<span class="comment">% z = sin(2*pi*t) * abs(y_fft(1));</span>
+<span class="comment">% for i=2:1:Lf,</span>
+<span class="comment">%     y1 = sin(2*pi*t*i) * abs(y_fft(i));</span>
+<span class="comment">%     z = [z;y1];</span>
+<span class="comment">% end</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% wigb(z',0.1);</span>
+<span class="comment">% %figure(3);</span>
+<span class="comment">% %plot(sum(z));</span>
+</pre><img vspace="5" hspace="5" src="FFTTest_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all; %清空内存
+clc; %清屏
+
+Fs = 256; %采样频率
+Tp = 2; %采样持续时间
+
+%原始信号
+f1 = 10; %频率1
+f2 = 8; %频率2
+
+t = 0:1/Fs:Tp; %采样时间序列
+L = length(t);%采样长度
+Lf = ceil(L/2);%砍掉一半，因为有假频
+figure(1);
+subplot(2,1,1);
+
+y=sin(2*pi*f1*t)+cos(2*pi*f2*t);%+cos(2*pi*50*t); %原始信号
+plot(t,y) ;%画出原始信号
+
+%fft变换
+y_fft = fft(y); %快速傅氏变换
+f=Fs/2*linspace(0,1,Lf);%取频率域横坐标
+subplot(2,1,2);
+plot(f,abs(y_fft(1:Lf)));%画出频率域信号
+
+% %其他的
+% figure(2);
+% z = sin(2*pi*t) * abs(y_fft(1));
+% for i=2:1:Lf,
+%     y1 = sin(2*pi*t*i) * abs(y_fft(i));
+%     z = [z;y1];
+% end
+%     
+%     
+% wigb(z',0.1);
+% %figure(3);
+% %plot(sum(z));
+
+
+##### SOURCE END #####
+--></body></html>
