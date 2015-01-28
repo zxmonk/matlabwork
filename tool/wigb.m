@@ -15,11 +15,14 @@ function wigb (a,scal,x,z,amx)
 %
 %    just like: a = a * dx /amx;  a = a * scal;  (line 39~40)
 %
+%    improved by Zhang Xiaoming at 2015-01-28 for making the figure-looks
+%    better!
 
-
-if nargin == 0, nx=10;nz=10; a = rand(nz,nx)-0.5; end;
+if nargin == 0, nx=50;nz=50; a = rand(nz,nx)-0.5; zend = 50;  end;
 
 [nz,nx]=size(a);
+
+zend = nz ;
 
 trmx= max(abs(a));
 if (nargin <= 4); amx=mean(trmx);  end;
@@ -57,9 +60,9 @@ set(gca,'NextPlot','add','Box','on', ...
 
 	z=z'; 	% input as row vector
 	zstart=1;    %%%%%%%%%%%%%%%%%%%%
-	zend  =10;       %%%%%%%%%%%%%%%%%%%
+	      %%%%%%%%%%%%%%%%%%%
 
-for i=1:nx,
+for i=nx:-1:1,
    
   if trmx(i) ~= 0;    % skip the zero traces
 	tr=a(:,i); 	% --- one scale for all section
@@ -99,9 +102,9 @@ for i=1:nx,
 %'LineWidth',linewidth, ...
 %12/7/97 'Xdata', x(i)+[0 0], 'Ydata',[z0 z1]*dz);	% remove zero line
 
-	line( 'Color',linecolor,'EraseMode','background',  ...
-	 'LineWidth',linewidth, ...
-	 'Xdata', tr+x(i), 'Ydata',z);	% negatives line
+	%line( 'Color',linecolor,'EraseMode','background',  ...
+	 %'LineWidth',linewidth, ...
+	 %'Xdata', tr+x(i), 'Ydata',z);	% negatives line
 
    else % zeros trace
 	line( 'Color',linecolor,'EraseMode','background',  ...
@@ -110,7 +113,50 @@ for i=1:nx,
    end;
 end;
 
+for i=nx:-1:1,
+    if trmx(i) ~= 0;
+        
+        tr=a(:,i); 	% --- one scale for all section
+  	s = sign(tr) ;
+  	i1= find( s(1:nz-1) ~= s(2:nz) );	% zero crossing points
+	npos = length(i1);
 
+
+	%12/7/97 
+	zadd = i1 + tr(i1) ./ (tr(i1) - tr(i1+1)); %locations with 0 amplitudes
+	aadd = zeros(size(zadd));
+
+	[zpos,vpos] = find(tr >0);
+	[zz,iz] = sort([zpos; zadd]); 	% indices of zero point plus positives
+	aa = [tr(zpos); aadd];
+	aa = aa(iz);
+
+	% be careful at the ends
+		if tr(1)>0, 	a0=0; z0=1.00;
+		else, 		a0=0; z0=zadd(1);
+		end;
+		if tr(nz)>0, 	a1=0; z1=nz; 
+		else, 		a1=0; z1=max(zadd);
+		end;
+			
+	zz = [z0; zz; z1; z0];
+ 	aa = [a0; aa; a1; a0];
+		
+
+	zzz = zstart + zz*dz -dz;
+
+	
+    
+        line( 'Color',linecolor,'EraseMode','background',  ...
+	 'LineWidth',linewidth, ...
+	 'Xdata', tr+x(i), 'Ydata',z);	% negatives line
+
+    else % zeros trace
+	line( 'Color',linecolor,'EraseMode','background',  ...
+	 'LineWidth',linewidth, ...
+         'Xdata', [x(i) x(i)], 'Ydata',[zstart zend]);
+   end;
+end;
 
 
 
